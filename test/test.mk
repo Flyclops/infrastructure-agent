@@ -117,13 +117,12 @@ endif
 	@echo 'LOG_FILE="/var/log/runner/$$(date '+%Y%m%d_%H%M').log"' >> /tmp/runner_scr.sh
 	@echo 'cd /home/ubuntu/dev/newrelic/infrastructure-agent' >> /tmp/runner_scr.sh
 	@echo 'date > $$LOG_FILE' >> /tmp/runner_scr.sh
-	@echo 'make test/automated/packaging 2>&1 >> $$LOG_FILE' >> /tmp/runner_scr.sh
+	@echo 'make test/automated-run 2>&1 >> $$LOG_FILE' >> /tmp/runner_scr.sh
 	@echo 'echo "" >> $$LOG_FILE' >> /tmp/runner_scr.sh
 	@echo 'date >> $$LOG_FILE' >> /tmp/runner_scr.sh
 	@echo 'mail -s "[RUNNER] Packaging tests results" caos-dev@newrelic.com -A $$LOG_FILE < $$LOG_FILE' >> /tmp/runner_scr.sh
 	@chmod +x /tmp/runner_scr.sh
 
-	make test/automated/provision
 	make test/runner/provision
 
 	scp -i $(SSH_KEY) /tmp/runner_scr.sh ubuntu@$(RUNNER_IP):/home/ubuntu/runner_scr.sh
