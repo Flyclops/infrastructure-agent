@@ -38,7 +38,7 @@ jobs:
 
   packaging-arm:
     needs: [unit-test, harvest-test, proxy-tests]
-    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@master
+    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@cciutea/add_checksums2
     secrets:
       DOCKER_HUB_ID: ${{secrets.OHAI_DOCKER_HUB_ID}}
       DOCKER_HUB_PASSWORD: ${{secrets.OHAI_DOCKER_HUB_PASSWORD}}
@@ -52,7 +52,7 @@ jobs:
 
   packaging-arm64:
     needs: [unit-test, harvest-test, proxy-tests]
-    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@master
+    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@cciutea/add_checksums2
     secrets:
       DOCKER_HUB_ID: ${{secrets.OHAI_DOCKER_HUB_ID}}
       DOCKER_HUB_PASSWORD: ${{secrets.OHAI_DOCKER_HUB_PASSWORD}}
@@ -66,7 +66,7 @@ jobs:
 
   packaging-legacy:
     needs: [unit-test, harvest-test, proxy-tests]
-    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@master
+    uses: newrelic/infrastructure-agent/.github/workflows/component_linux_packaging.yml@cciutea/add_checksums2
     secrets:
       DOCKER_HUB_ID: ${{secrets.OHAI_DOCKER_HUB_ID}}
       DOCKER_HUB_PASSWORD: ${{secrets.OHAI_DOCKER_HUB_PASSWORD}}
