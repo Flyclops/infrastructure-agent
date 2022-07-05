@@ -280,7 +280,7 @@ func initializeAgentAndRun(c *config.Config, logFwCfg config.LogForward) error {
 	pluginSourceDirs := getPluginSourceDirs(c)
 
 	v4ManagerConfig := v4.NewManagerConfig(
-		c.Verbose,
+		c.Log.VerboseEnabled(),
 		c.Features,
 		c.PassthroughEnvironment,
 		c.PluginInstanceDirs,
@@ -720,7 +720,7 @@ func executeIntegrationsDryRunMode(configPath string, ac *config.Config) {
 	}
 
 	v4ManagerConfig := v4.NewManagerConfig(
-		ac.Verbose,
+		ac.Log.VerboseEnabled(),
 		ac.Features,
 		ac.PassthroughEnvironment,
 		integrationConfigPaths,

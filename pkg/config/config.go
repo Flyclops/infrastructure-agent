@@ -1174,6 +1174,16 @@ func (lc *LogConfig) HasIncludeFilter(key, value string) bool {
 	return false
 }
 
+// VerboseEnabled return 1 if debug or higher log level is enabled.
+// The primary purpose is for backwards compatibility with Verbose int attribute.
+func (lc *LogConfig) VerboseEnabled() int {
+	if lc.Level == LogLevelDebug || lc.Level == LogLevelTrace {
+		return 1
+	}
+
+	return 0
+}
+
 func coalesce(values ...string) string {
 	for _, value := range values {
 		if value != "" {
