@@ -225,10 +225,10 @@ func main() {
 	configureLogFormat(cfg.Log)
 
 	// Send logging where it's supposed to go.
-	agentLogsToFile := configureLogRedirection(cfg, memLog)
+	agentLogsToFile := configureLogRedirection(&cfg.Log, memLog)
 
 	// Runtime config setup.
-	troubleCfg := config.NewTroubleshootCfg(cfg.IsTroubleshootMode(), agentLogsToFile, cfg.GetLogFile())
+	troubleCfg := config.NewTroubleshootCfg(cfg.Log.IsTroubleshootMode(), agentLogsToFile, cfg.GetLogFile())
 	logFwCfg := config.NewLogForward(cfg, troubleCfg)
 
 	// If parsedConfig.MaxProcs < 1, leave GOMAXPROCS to its previous value,
@@ -585,12 +585,12 @@ func configureLogFormat(cfg config.LogConfig) {
 // Either route standard logging to stdout (for Linux, so it gets copied to syslog as appropriate)
 // or copy it to stdout and a log file for Mac/Windows so we don't lose the logging when running
 // as a service.
-func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onFile bool) {
-	if config.Log.File == "" && !(config.IsTroubleshootMode() && systemd.IsAgentRunningOnSystemD()) {
+func configureLogRedirection(config *config.LogConfig, memLog *wlog.MemLogger) (onFile bool) {
+	if config.File == "" && !(config.IsTroubleshootMode() && systemd.IsAgentRunningOnSystemD()) {
 		wlog.SetOutput(os.Stdout)
 	} else {
 		// Redirect all output to both stdout and the agent's own log file.
-		logFile, err := disk.OpenFile(config.Log.File, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		logFile, err := disk.OpenFile(config.File, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			alog.WithField("action", "configureLogRedirection").WithError(err).Error("Can't open log file.")
 			os.Exit(1)
@@ -598,7 +598,7 @@ func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onF
 		alog.WithFields(logrus.Fields{
 			"action":      "configureLogRedirection",
 			"logFile":     logFile.Name(),
-			"logToStdout": *config.Log.ToStdout,
+			"logToStdout": *config.ToStdout,
 		}).Debug("Redirecting output to a file.")
 		// Write all previous logs, which are stored in memLog, to the file.
 		_, err = memLog.WriteBuffer(logFile)
@@ -607,7 +607,7 @@ func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onF
 		} else {
 			onFile = true
 		}
-		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: *config.Log.ToStdout})
+		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: *config.ToStdout})
 	}
 	return
 }
