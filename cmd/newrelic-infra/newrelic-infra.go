@@ -586,11 +586,11 @@ func configureLogFormat(cfg config.LogConfig) {
 // or copy it to stdout and a log file for Mac/Windows so we don't lose the logging when running
 // as a service.
 func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onFile bool) {
-	if config.LogFile == "" && !(config.IsTroubleshootMode() && systemd.IsAgentRunningOnSystemD()) {
+	if config.Log.File == "" && !(config.IsTroubleshootMode() && systemd.IsAgentRunningOnSystemD()) {
 		wlog.SetOutput(os.Stdout)
 	} else {
 		// Redirect all output to both stdout and the agent's own log file.
-		logFile, err := disk.OpenFile(config.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		logFile, err := disk.OpenFile(config.Log.File, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			alog.WithField("action", "configureLogRedirection").WithError(err).Error("Can't open log file.")
 			os.Exit(1)
