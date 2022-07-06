@@ -598,7 +598,7 @@ func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onF
 		alog.WithFields(logrus.Fields{
 			"action":      "configureLogRedirection",
 			"logFile":     logFile.Name(),
-			"logToStdout": config.LogToStdout,
+			"logToStdout": *config.Log.ToStdout,
 		}).Debug("Redirecting output to a file.")
 		// Write all previous logs, which are stored in memLog, to the file.
 		_, err = memLog.WriteBuffer(logFile)
@@ -607,7 +607,7 @@ func configureLogRedirection(config *config.Config, memLog *wlog.MemLogger) (onF
 		} else {
 			onFile = true
 		}
-		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: config.LogToStdout})
+		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: *config.Log.ToStdout})
 	}
 	return
 }
