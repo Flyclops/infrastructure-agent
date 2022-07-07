@@ -212,7 +212,7 @@ func main() {
 	}
 
 	if cfg.Log.Level == config.LogLevelSmart {
-		wlog.EnableSmartVerboseMode(*cfg.Log.SmartLevelEntryLimit)
+		wlog.EnableSmartVerboseMode(cfg.Log.GetSmartLogLevelLimit())
 	}
 
 	if debug || cfg.WebProfile {
@@ -598,7 +598,7 @@ func configureLogRedirection(config *config.LogConfig, memLog *wlog.MemLogger) (
 		alog.WithFields(logrus.Fields{
 			"action":      "configureLogRedirection",
 			"logFile":     logFile.Name(),
-			"logToStdout": *config.ToStdout,
+			"logToStdout": config.IsStdoutEnabled(),
 		}).Debug("Redirecting output to a file.")
 		// Write all previous logs, which are stored in memLog, to the file.
 		_, err = memLog.WriteBuffer(logFile)
@@ -607,7 +607,7 @@ func configureLogRedirection(config *config.LogConfig, memLog *wlog.MemLogger) (
 		} else {
 			onFile = true
 		}
-		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: *config.ToStdout})
+		wlog.SetOutput(&fileAndConsoleLogger{logFile: logFile, stdout: config.IsStdoutEnabled()})
 	}
 	return
 }
