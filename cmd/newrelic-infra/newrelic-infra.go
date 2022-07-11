@@ -211,7 +211,7 @@ func main() {
 		cfg.MemProfile = memprofile
 	}
 
-	if cfg.Log.Level == config.LogLevelSmart {
+	if cfg.Log.IsSmartLogging() {
 		wlog.EnableSmartVerboseMode(cfg.Log.GetSmartLogLevelLimit())
 	}
 
